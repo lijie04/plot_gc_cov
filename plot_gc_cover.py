@@ -11,7 +11,6 @@ import sys
 import argparse
 from system_utils import check_file_exists,check_files_exist,make_full_path,check_path_exists
 import os
-import re
 import Bio
 from Bio import SeqIO
 
@@ -40,47 +39,41 @@ def read_pars(args):
 
 if __name__ == '__main__':
 	pars = read_pars(sys.argv)
-	#print(pars['o'])
 	check_files_exist([pars['contigs'], pars['coverage']])
 	if pars['bins_dir']:check_path_exists(pars['bins_dir'])
 	outdir = make_full_path(pars['o'])
-	print(outdir)
 	final_gc = gc(pars['contigs'], pars['contig_len'])
 	gc_table = final_gc.count_fasta_gc()
 	gc_table = pd.DataFrame.from_dict(gc_table, orient='index', columns=['GC_content'])
-
+	
 	#print(gc_table)
-	#pd.DataFrame.from_dict(table, orient='index', columns=['GC_content']).to_csv("gc_content.txt", sep="\t")
 
 	gc_table.to_csv(outdir + pars['prefix'] + "_gc_content.txt", sep="\t")
 	
 	cov = pd.read_csv(pars['coverage'], sep="\t", header=0, index_col=0)
-	new = cov.merge(gc_table, how='inner', left_index=True, right_index=True) # get contigs have both gc and coverage
+	# get contigs have both gc and coverage
+	new = cov.merge(gc_table, how='inner', left_index=True, right_index=True)
 	new.to_csv(outdir + pars['prefix'] +'_gc_and_coverage.csv', sep='\t')
 	
-	if re.search('-', pars['cov_width']):
+	if '-' in pars['cov_width']:
 		cov_width = pars['cov_width'].split('-')
 		new = new[(new.Coverage >= cov_width[0]) & (new.Coverage <= cov_width[1])]
 	
-	color_sets = ['blue', 'red', 'yellow', 'green', 'orange', 'purple', 'pink', 'black']
-	contigs_color = pd.DataFrame()
-	flag = 0
-	for f in os.listdir(pars['bins_dir']):
-		print('hahah')
-		if f.endswith(pars['suffix']):
-			print(f)
-			f_ids = SeqIO.to_dict(SeqIO.parse(os.path.join(pars['bins_dir'], f), 'fasta')).keys()
-#			print(len(f_ids))
-#			print(len(set(f_ids)))
-			f_ids = pd.DataFrame(index=f_ids, columns=['color'], data=color_sets[flag])
-#			print(f_ids)
-			contigs_color = pd.concat([contigs_color, f_ids])
-			flag += 1
-	
-	# then assign grey to all unbinned contigs
-	full_contigs_color = [contigs_color.color.loc[i] if i in contigs_color.index else 'grey' for i in new.index]
-	print(set(full_contigs_color))
-
+	if pars['bins_dir']:
+		flag = 0
+		contigs_color = pd.DataFrame()
+		color_sets = ['blue', 'red', 'yellow', 'green', 'orange', 'purple', 'pink', 'black']
+		for f in os.listdir(pars['bins_dir']):
+			if f.endswith(pars['suffix']):
+				f_ids = SeqIO.to_dict(SeqIO.parse(os.path.join(pars['bins_dir'], f), 'fasta')).keys()
+				f_ids = pd.DataFrame(index=f_ids, columns=['color'], data=color_sets[flag])
+				contigs_color = pd.concat([contigs_color, f_ids])
+				flag += 1
+				# then assign grey to all unbinned contigs
+		full_contigs_color=[contigs_color.color.loc[i] if i in contigs_color.index else 'grey' for i in new.index]
+	else:
+		full_contigs_color = ['grey'] * len(new.index)
+	#print(set(full_contigs_color))
 	plt.figure(1)
 	new.plot.scatter(x='GC_content', y='Coverage', c=full_contigs_color, s=1)
 	plt.xlabel('GC_content')
