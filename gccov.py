@@ -11,8 +11,7 @@ import sys
 import argparse
 from system_utils import check_file_exists,check_files_exist,make_full_path,check_path_exists
 import os
-import Bio
-from Bio import SeqIO
+from scatter import scatter
 
 def read_pars(args):
 
@@ -21,6 +20,8 @@ def read_pars(args):
 				help='contigs/scaffolds for GC content')
 	p.add_argument('--coverage', dest='coverage', required=True,
 				help='coverage file, with column name Coverage')
+	p.add_argument('-scale', dest='scale', default=False, action='store_true',
+				help='set to scale scatter dots with your scaffolds/contigs length')
 	p.add_argument('-prefix', dest='prefix', default='gc_coverage',
 				help='prefix of outputs, [gc_coverage]')
 	p.add_argument('-contig_len', dest='contig_len', default=2500, type=float,
@@ -31,7 +32,7 @@ def read_pars(args):
 				help='bins dir to color genomes you provide')
 	p.add_argument('-suffix', dest='suffix', default='fa',
 				help='suffix of bins if you profile -bins_dir, [fa]')
-	p.add_argument('-o', dest='o', default=os.getcwd(),
+	p.add_argument('-o', dest='outdir', default=os.getcwd(),
 				help='output dir')
 
 	return vars(p.parse_args())
@@ -41,10 +42,10 @@ if __name__ == '__main__':
 	pars = read_pars(sys.argv)
 	check_files_exist([pars['contigs'], pars['coverage']])
 	if pars['bins_dir']:check_path_exists(pars['bins_dir'])
-	outdir = make_full_path(pars['o'])
+	outdir = make_full_path(pars['outdir'])
 	final_gc = gc(pars['contigs'], pars['contig_len'])
 	gc_table = final_gc.count_fasta_gc()
-	gc_table = pd.DataFrame.from_dict(gc_table, orient='index', columns=['GC_content'])
+	gc_table = pd.DataFrame.from_dict(gc_table, orient='index', columns=['GC_content', 'Seq_length'])
 	
 	#print(gc_table)
 
@@ -56,29 +57,13 @@ if __name__ == '__main__':
 	new.to_csv(outdir + pars['prefix'] +'_gc_and_coverage.csv', sep='\t')
 	
 	if '-' in pars['cov_width']:
-		cov_width = pars['cov_width'].split('-')
+		cov_width = [float(i) for i in pars['cov_width'].split('-')]
 		new = new[(new.Coverage >= cov_width[0]) & (new.Coverage <= cov_width[1])]
-	
-	if pars['bins_dir']:
-		flag = 0
-		contigs_color = pd.DataFrame()
-		color_sets = ['blue', 'red', 'yellow', 'green', 'orange', 'purple', 'pink', 'black']
-		for f in os.listdir(pars['bins_dir']):
-			if f.endswith(pars['suffix']):
-				f_ids = SeqIO.to_dict(SeqIO.parse(os.path.join(pars['bins_dir'], f), 'fasta')).keys()
-				f_ids = pd.DataFrame(index=f_ids, columns=['color'], data=color_sets[flag])
-				contigs_color = pd.concat([contigs_color, f_ids])
-				flag += 1
-				# then assign grey to all unbinned contigs
-		full_contigs_color=[contigs_color.color.loc[i] if i in contigs_color.index else 'grey' for i in new.index]
-	else:
-		full_contigs_color = ['grey'] * len(new.index)
-	#print(set(full_contigs_color))
-	plt.figure(1)
-	new.plot.scatter(x='GC_content', y='Coverage', c=full_contigs_color, s=1)
-	plt.xlabel('GC_content')
-	plt.ylabel('Coverage')
-	plt.savefig(outdir + pars['prefix'] + '.pdf')
+		
+	scatter_plot = scatter(new, outdir, pars['bins_dir'], pars['suffix'], pars['scale'])
+	scatter_plot.plot()
+
+	os.rename(outdir+'scatter_bubbles.pdf', outdir+pars['prefix']+'.pdf')
 
 
 
