@@ -8,9 +8,8 @@ You can try with the test data from /test/
 # Some detailed explainations:
 --contigs: it means a fasta format file for script to calculate GC content.
 --coverage: it means a pre-calculated coverage file, at least some of the sequences in --contigs you want to show in the final plot.
+--bam-file: sorted bam file as input to calculate coverage of references
 -bins_dir: this is optional. With fasta files end with -suffix contained in -bins_dir, you will get fancy bubbles that colored in different color. For example, if you provide two fa files in -bins_dir, they contain 10 and 9 sequences respectively, then the 10 and 9 sequences will be colored with different color in final plot while other dots are grey.
 
 
-# Next plan:
-1. add a coverage/abundance calculation module
 
