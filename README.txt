@@ -1,5 +1,5 @@
 
-# gccov is for plotting gc content and coverage/abundance and visualize it.
+# gccov is for plotting gc content and coverage and visualize it.
 Basically, it calculate the GC content of each sequence, then readin the coverage of each sequences, if you provide -bins_dir, then it will scatter different color on each fasta file you provide with -bins_dir
 
 # if you want to test:

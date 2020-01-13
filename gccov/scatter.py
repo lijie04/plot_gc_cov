@@ -46,7 +46,7 @@ class scatter:
 	def _color_set(self):
 		flag = 0
 		contigs_color = pd.DataFrame()
-		color_sets = ['blue', 'red', 'yellow', 'green', 'orange', 'purple', 'pink', 'black']
+		color_sets = ['blue', 'red', 'yellow', 'green', 'orange', 'purple', 'pink']
 		for f in os.listdir(self.bins_dir):
 			if f.endswith(self.suffix):
 				#print(f)
