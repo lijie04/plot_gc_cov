@@ -2,6 +2,10 @@
 # gccov is for plotting gc content and coverage and visualize it.
 Basically, it calculate the GC content of each sequence, then readin the coverage of each sequences, if you provide -bins_dir, then it will scatter different color on each fasta file you provide with -bins_dir
 
+# dependencies:
+1. coverm (0.3.2). Developed under coverm-v0.3.2
+2. python packages: pandas (0.25.3), matplotlib (3.1.2), seaborn (0.8.1), Bio (1.72)
+
 # if you want to test:
 You can try with the test data from /test/
 /path/to/gccov --contigs test.fasta --coverage test.coverage -prefix test -bins_dir $PWD -contig_len 0

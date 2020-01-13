@@ -87,6 +87,7 @@ def make_full_path(path):
 	return path
 
 def check_software(sft):
+	''''''
 	if os.system(sft) == 32512:
 		sys.exit('Software %s is not exist.\n' % sft)
 

@@ -11,6 +11,7 @@ import sys
 import argparse
 
 import pandas as pd
+	
 
 sys.path = [os.path.join((os.path.dirname(os.path.realpath(__file__))), '..')] + sys.path
 
@@ -49,7 +50,6 @@ def read_pars(args):
 				help='suffix of bins if you profile -bins_dir, [fa]')
 	optional_arguments.add_argument('-o', dest='outdir', default=os.getcwd(),
 				help='output dir')
-
 	return vars(p.parse_args())
 
 if __name__ == '__main__':
