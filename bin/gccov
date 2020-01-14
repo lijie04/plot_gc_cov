@@ -54,7 +54,6 @@ def read_pars(args):
 
 if __name__ == '__main__':
 	pars = read_pars(sys.argv)
-#	if pars['bins_dir']:check_path_exists(pars['bins_dir'])
 	outdir = make_full_path(pars['outdir'])
 	final_gc = gc(pars['contigs'], pars['contig_len'])
 	gc_table = final_gc.count_fasta_gc()
@@ -82,8 +81,9 @@ if __name__ == '__main__':
 		cov_width = [float(i) for i in pars['cov_width'].split('-')]
 		new = new[(new.Coverage >= cov_width[0]) & (new.Coverage <= cov_width[1])]
 		
-	scatter_plot = scatter(new, outdir+pars['prefix']+'.pdf', \
-						pars['bins_dir'], pars['suffix'], pars['scale'])
+#	scatter_plot = scatter(new, outdir+pars['prefix']+'.pdf', \
+#						pars['bins_dir'], pars['suffix'], pars['scale'])
+	scatter_plot = scatter(new, outdir+pars['prefix']+'.pdf', **pars)
 	scatter_plot.plot()
 
 

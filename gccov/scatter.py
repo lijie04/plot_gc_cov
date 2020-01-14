@@ -15,21 +15,22 @@ import pandas as pd
 
 
 class scatter:
-	def __init__(self, data, outpdf, bins_dir=None, suffix='fa', scale=False):
+#	def __init__(self, data, outpdf, bins_dir=None, suffix='fa', scale=False):
+	def __init__(self, data, outpdf, **targs):
 		self.data = data
-		self.bins_dir = bins_dir
-		self.suffix = suffix
+#		self.bins_dir = bins_dir
+#		self.suffix = suffix
 		self.outpdf = outpdf
-		self.scale = scale
-		
+#		self.scale = scale
+		self.targs = targs
 
 	def plot(self):
-		if self.bins_dir:
+		if self.targs['bins_dir']:
 			full_contigs_color = self._color_set()
 		else:
 			full_contigs_color = ['grey'] * len(self.data)
 		plt.figure(1)
-		if self.scale:
+		if self.targs['scale']:
 			self.data.plot.scatter(x='GC_content', y='Coverage',
 								c=full_contigs_color, linewidths=.5,
 								edgecolors='k', alpha=.5,
@@ -47,8 +48,8 @@ class scatter:
 		flag = 0
 		contigs_color = pd.DataFrame()
 		color_sets = ['blue', 'red', 'yellow', 'green', 'orange', 'purple', 'pink']
-		for f in os.listdir(self.bins_dir):
-			if f.endswith(self.suffix):
+		for f in os.listdir(self.targs['bins_dir']):
+			if f.endswith(self.targs['suffix']):
 				#print(f)
 				#print(color_sets[flag])
 				f_ids = SeqIO.to_dict(SeqIO.parse(os.path.join(self.bins_dir, f), 'fasta')).keys()
