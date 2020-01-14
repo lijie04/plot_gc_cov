@@ -22,5 +22,7 @@ If you don't have dots want to color, you can just leave -bins_dir alone:
 --bam-file: sorted bam file as input to calculate coverage of references 
 -bins_dir: this is optional. With fasta files end with -suffix contained in -bins_dir, you will get fancy bubbles that colored in different color. For example, if you provide two fa files in -bins_dir, they contain 10 and 9 sequences respectively, then the 10 and 9 sequences will be colored with different color in final plot while other dots are grey. 
 
-
+#Next plans:
+1. add an option to choose solid circle or hollow circle
+2. add pysam
 
