@@ -1,1 +1,1 @@
-# It is under actively development.
+# Personal use.
