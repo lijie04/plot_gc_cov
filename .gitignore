@@ -12,3 +12,6 @@ develop-eggs/
 # test files
 test/
 test_project/
+
+# other files
+readme.md
