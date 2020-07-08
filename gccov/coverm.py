@@ -25,7 +25,6 @@ class coverm:
 			proc = subprocess.Popen(cmd, stdout=outf)
 		
 		proc.wait()
-		
 
 		if proc.returncode !=0:
 			sys.exit('Error encountered while running coverm')
