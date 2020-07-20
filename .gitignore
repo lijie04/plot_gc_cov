@@ -1,17 +1,17 @@
 # Byte-compiled files
-__pycache__/*
-gccov/__pycache__/*
+**/__pycache__/
+
+# Distribution / packaging files
+/build/
+/dist/
+/develop-eggs/
+*.egg-info/
 *.pyc
 
-# Distribution / packaging
-build/
-dist/
-develop-eggs/
-*.egg-info/
-
-# test files
-test/
-test_project/
+# docs
+/docs/
 
 # other files
-readme.md
+/.git/
+/test/
+/test_project/
