@@ -15,8 +15,7 @@ setup(
 	name = 'gccov',
 	description = 'Visualize gc & coverage.',
 	version = version(),
-	url='None', # optional
-
+	url = 'https://github.com/jlli6t/gccov',
 	author = 'M.M Jie Li',
 	author_email = 'mm.jlli6t@gmail.com',
 	maintainer = 'M.M Jie Li',
@@ -31,5 +30,5 @@ setup(
 
 	packages = find_packages(),
 	python_requires = '>=3.6',
-	install_requires=['biosut>=1.0.0']
+	install_requires=['biosut>=1.0.0',],
 )
