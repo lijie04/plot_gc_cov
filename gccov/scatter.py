@@ -1,15 +1,14 @@
+"""
+The :mod:`gccov.scatter` plot scatter bubbles.
+"""
 
-#####################################################
-#													#
-# scatter.py - plot scatter bubbles					#
-#													#
-#####################################################
+# Author: Jie Li <mm.jlli6t@gmail.com>
+# License: GNU v3.0
 
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import Bio
-from Bio import SeqIO
+from biosut import io_seq
 import os
 import pandas as pd
 
@@ -48,7 +47,7 @@ class scatter:
 		plt.xlabel('GC_content')
 		plt.ylabel('Coverage')
 		plt.savefig(self.outpdf)
-		
+
 	def _color_set(self):
 		flag = 0
 		color_sets = ['blue', 'red', 'yellow', 'green', 'orange', 'purple', 'pink']
@@ -57,7 +56,7 @@ class scatter:
 			if f.endswith(self.suffix):
 				#print(f)
 				print(color_sets[flag])
-				f_ids = SeqIO.to_dict(SeqIO.parse(os.path.join(self.bins_dir, f), 'fasta'))
+				f_ids = io_seq.to_dict(io_seq.parse(os.path.join(self.bins_dir, f), 'fasta'))
 				for i in f_ids.keys():
 					f_ids[i] = color_sets[flag]
 				contigs_color.update(f_ids)
@@ -65,5 +64,3 @@ class scatter:
 		# then assign grey to all unbinned contigs
 		full_contigs_color=[contigs_color[i] if i in contigs_color.keys() else 'grey' for i in self.data.index]
 		return full_contigs_color
-
-
