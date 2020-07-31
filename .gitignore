@@ -15,3 +15,5 @@
 /.git/
 /test/
 /test_project/
+Logger.py
+.DS_Store

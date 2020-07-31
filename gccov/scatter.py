@@ -56,7 +56,7 @@ class scatter:
 			if f.endswith(self.suffix):
 				#print(f)
 				print(color_sets[flag])
-				f_ids = io_seq.to_dict(io_seq.parse(os.path.join(self.bins_dir, f), 'fasta'))
+				f_ids = io_seq.seq_to_dict(io_seq.parse(os.path.join(self.bins_dir, f), 'fasta'))
 				for i in f_ids.keys():
 					f_ids[i] = color_sets[flag]
 				contigs_color.update(f_ids)

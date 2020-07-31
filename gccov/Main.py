@@ -15,8 +15,9 @@ import pandas as pd
 
 sys.path = [os.path.join((os.path.dirname(os.path.realpath(__file__))), '..')] + sys.path
 
-from biosut.biosys import gt_file, gt_path
+from biosut import go_file, go_path
 from biosut.io_seq import gc_to_dict
+
 from gccov.scatter import scatter
 from gccov.coverm import coverm
 
@@ -54,7 +55,7 @@ def read_pars(args):
 
 if __name__ == '__main__':
 	pars = read_pars(sys.argv)
-	outdir = gt_path.sure_exist(pars.outdir)
+	outdir = go_path.sure_exist(pars.outdir)
 	gc_table = gc_to_dict(pars.contigs, pars.contig_len, length=True)
 
 	gc_table = pd.DataFrame.from_dict(gc_table)
@@ -69,7 +70,7 @@ if __name__ == '__main__':
 		coverm_pile.run()
 	else:
 		cov = pars.coverage
-	gt_file.check_exist(cov, check_empty=True)
+	go_file.check_exist(cov, check_empty=True)
 
 	cov = pd.read_csv(cov, sep="\t", header=0, index_col=0)
 	cov.columns = ['Coverage']
