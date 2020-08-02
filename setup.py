@@ -2,19 +2,12 @@
 
 from setuptools import setup, find_packages
 import os
-
-def version():
-	vers_file = os.path.dirname(os.path.realpath(__file__)) + '/VERSION'
-
-	if os.path.isfile(vers_file):
-		return open(vers_file).readline().strip()
-	else:
-		return none
+from gccov.version import Version
 
 setup(
 	name = 'gccov',
 	description = 'Visualize gc & coverage.',
-	version = version(),
+	version = Version.get_version(),
 	url = 'https://github.com/jlli6t/gccov',
 	author = 'M.M Jie Li',
 	author_email = 'mm.jlli6t@gmail.com',
@@ -30,5 +23,5 @@ setup(
 
 	packages = find_packages(),
 	python_requires = '>=3.6',
-	install_requires=['biosut>=1.0.0',],
+	install_requires=['biosut>=2.0.0',],
 )

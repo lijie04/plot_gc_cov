@@ -36,15 +36,15 @@ class scatter:
 #								c=full_contigs_color, linewidths=.5,
 #								edgecolors='k', alpha=.5,
 #								s=self.data['Seq_length']/10000)
-			self.data.plot.scatter(x='GC_content', y='Coverage',
+			self.data.plot.scatter(x='gc_ratio', y='coverage',
 								c='white', linewidth=.5,
 								edgecolors=full_contigs_color,
-								alpha=.5, s=self.data['Seq_length']/self.size)
+								alpha=.5, s=self.data['seq_length']/self.size)
 		else:
-			self.data.plot.scatter(x='GC_content', y='Coverage',
-								c=full_contigs_color, alpha=.5,
-								s=1)
-		plt.xlabel('GC_content')
+			self.data.plot.scatter(x='gc_ratio', y='coverage',
+								c=full_contigs_color, alpha=.5, s=1)
+
+		plt.xlabel('GC%')
 		plt.ylabel('Coverage')
 		plt.savefig(self.outpdf)
 
@@ -56,7 +56,7 @@ class scatter:
 			if f.endswith(self.suffix):
 				#print(f)
 				print(color_sets[flag])
-				f_ids = io_seq.seq_to_dict(io_seq.parse(os.path.join(self.bins_dir, f), 'fasta'))
+				f_ids = io_seq.seq_to_dict(os.path.join(self.bins_dir, f), outqual=False)
 				for i in f_ids.keys():
 					f_ids[i] = color_sets[flag]
 				contigs_color.update(f_ids)

@@ -7,14 +7,14 @@
 
 import os
 import sys
-import subprocess
-from biosut.biosys import gt_exe,gt_file
+from biosut import gt_exe, gt_file
 
 class coverm:
 	def __init__(self, bam, outfile):
 		gt_exe.is_executable('coverm')
 		self.bam = bam
 		self.outfile = outfile
+
 	def run(self):
 		cmd = ['coverm', 'contig', '--bam-files', self.bam, '--methods', 'mean',
 				'--min-covered-fraction', '0', '--output-format', 'dense',

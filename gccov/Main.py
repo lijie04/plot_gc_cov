@@ -11,19 +11,20 @@ import sys
 import argparse
 
 import pandas as pd
+from biosut.gt_path import real_path
 
+sys.path = [os.path.join((os.path.dirname(real_path(__file__))), '..')] + sys.path
 
-sys.path = [os.path.join((os.path.dirname(os.path.realpath(__file__))), '..')] + sys.path
-
-from biosut import go_file, go_path
+from biosut import gt_file, gt_path
 from biosut.io_seq import gc_to_dict
 
 from gccov.scatter import scatter
 from gccov.coverm import coverm
+from gccov.version import Version
 
-def read_pars(args):
+def read_arg(args):
 
-	p = argparse.ArgumentParser(description=__doc__)
+	p = argparse.ArgumentParser(description=Version.show_version())
 	required_argument = p.add_argument_group('Required arguments')
 
 	required_argument.add_argument('--contigs', required=True,
@@ -53,39 +54,43 @@ def read_pars(args):
 					help='output dir')
 	return p.parse_args()
 
-if __name__ == '__main__':
-	pars = read_pars(sys.argv)
-	outdir = go_path.sure_exist(pars.outdir)
-	gc_table = gc_to_dict(pars.contigs, pars.contig_len, length=True)
+class Main:
 
-	gc_table = pd.DataFrame.from_dict(gc_table)
+	def exe(args):
+		arg = read_arg(args)
+		outdir = gt_path.sure_path_exist(arg.outdir)
+		gc_table = gc_to_dict(arg.contigs, arg.contig_len, length=True)
 
-	print("Finished get GC content.\n")
+		gc_table = pd.DataFrame.from_dict(gc_table).T
+		gc_table.columns = ['gc_count', 'seq_length']
+		gc_table['gc_ratio'] = gc_table.gc_count/gc_table.seq_length*100.
+		print("Finished get GC content.\n")
 
-	gc_table.to_csv(outdir + pars.prefix + '_gc_content.txt', sep='\t')
+		gc_table.to_csv(outdir +'/'+ arg.prefix + '_gc_content.txt', sep='\t')
 
-	if pars.bam_file:
-		cov = os.path.join(outdir, pars.prefix+'.coverage')
-		coverm_pile = coverm(pars.bam_file, cov)
-		coverm_pile.run()
-	else:
-		cov = pars.coverage
-	go_file.check_exist(cov, check_empty=True)
+		if arg.bam_file:
+			cov = os.path.join(outdir, arg.prefix+'.coverage')
+			coverm_pile = coverm(arg.bam_file, cov)
+			coverm_pile.run()
+		else:
+			cov = arg.coverage
+		gt_file.check_file_exist(cov, check_empty=True)
 
-	cov = pd.read_csv(cov, sep="\t", header=0, index_col=0)
-	cov.columns = ['Coverage']
-	print('Finished get Coverage.\n')
+		cov = pd.read_csv(cov, sep="\t", header=0, index_col=0)
+		print(cov)
+		cov.columns = ['coverage']
+		print('Finished get Coverage.\n')
 
-	# get contigs have both gc and coverage
-	new = cov.merge(gc_table, how='inner', left_index=True, right_index=True)
-	new.to_csv(outdir + pars.prefix +'_gc_and_coverage.csv', sep='\t')
+			# get contigs have both gc and coverage
+		new = cov.merge(gc_table, how='inner', left_index=True, right_index=True)
+		new.to_csv(outdir + '/' + arg.prefix +'_gc_and_coverage.csv', sep='\t')
 
-	if '-' in pars.cov_width:
-		cov_width = [float(i) for i in pars.cov_width.split('-')]
-		new = new[(new.Coverage >= cov_width[0]) & (new.Coverage <= cov_width[1])]
+		if '-' in arg.cov_width:
+			cov_width = [float(i) for i in arg.cov_width.split('-')]
+			new = new[(new.coverage >= cov_width[0]) & (new.coverage <= cov_width[1])]
 
-	scatter_plot = scatter(new, outdir+pars.prefix+'.pdf', \
-							pars.bins_dir, pars.suffix, pars.scale, \
-							pars.size)
-#	scatter_plot = scatter(new, outdir+pars['prefix']+'.pdf', **pars)
-	scatter_plot.plot()
+		scatter_plot = scatter(new, outdir+'/'+arg.prefix+'.pdf', \
+								arg.bins_dir, arg.suffix, arg.scale, \
+								arg.size)
+#								scatter_plot = scatter(new, outdir+pars['prefix']+'.pdf', **pars)
+		scatter_plot.plot()
