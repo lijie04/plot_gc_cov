@@ -20,7 +20,7 @@ setup(
 				'Operating System :: Unix',
 		],
 	keywords = 'biology bioinformatics',
-
+	scripts=['bin/gccov'],
 	packages = find_packages(),
 	python_requires = '>=3.6',
 	install_requires=['biosut>=2.0.0',],
