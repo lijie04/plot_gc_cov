@@ -11,8 +11,8 @@ import sys
 
 import gccov
 
-from gccov.Main import read_arg
-from gccov.Main import stream
+from gccov.workflow import read_arg
+from gccov.workflow import stream
 
 if __name__ == '__main__':
 	if len(sys.argv) == 1:

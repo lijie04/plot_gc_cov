@@ -22,6 +22,7 @@ setup(
 	keywords = 'biology bioinformatics',
 	scripts=['bin/gccov'],
 	packages = find_packages(),
+	include_package_data=True,
 	python_requires = '>=3.6',
 	install_requires=['biosut>=2.0.0',],
 )
