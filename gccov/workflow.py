@@ -1,5 +1,5 @@
 """
-The :mod:`gccov.main` pileup the workflow.
+The :mod:`gccov.workflow` pileup the workflow.
 """
 
 # Author: Jie Li <mm.jlli6t@gmail.com>
@@ -12,8 +12,6 @@ import argparse
 
 import pandas as pd
 from biosut.gt_path import real_path
-
-sys.path = [os.path.join((os.path.dirname(real_path(__file__))), '..')] + sys.path
 
 from biosut import gt_file, gt_path
 from biosut.io_seq import gc_to_dict
@@ -46,6 +44,8 @@ def read_arg(args):
 					help='contig length cutoff for GC content and plot, [2500]')
 	optional_arguments.add_argument('-cov_width', default='0', type=str,
 					help='cov range you want to plot, for example 0-100, single 0 means all, [0]')
+	optional_arguments.add_argument('-gc_width', default='0', type=str,
+					help='gc ratio range you want to plot, for example 0-80, single 0 means all, [0]')
 	optional_arguments.add_argument('-bins_dir', default=None,
 					help='bins dir to color genomes you provide')
 	optional_arguments.add_argument('-suffix', default='fa',
@@ -77,7 +77,7 @@ class stream:
 		gt_file.check_file_exist(cov, check_empty=True)
 
 		cov = pd.read_csv(cov, sep="\t", header=0, index_col=0)
-		print(cov)
+		#print(cov)
 		cov.columns = ['coverage']
 		print('Finished get Coverage.\n')
 
@@ -89,6 +89,9 @@ class stream:
 			cov_width = [float(i) for i in arg.cov_width.split('-')]
 			new = new[(new.coverage >= cov_width[0]) & (new.coverage <= cov_width[1])]
 
+		if '-' in arg.gc_width:
+			gc_width = [float(i) for i in arg.gc_width.split('-')]
+			new = new[(new.gc_ratio >= gc_width[0]) & (new.gc_ratio <= gc_width[1])]
 		scatter_plot = scatter(new, outdir+'/'+arg.prefix+'.pdf', \
 								arg.bins_dir, arg.suffix, arg.scale, \
 								arg.size)

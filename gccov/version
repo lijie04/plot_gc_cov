@@ -1,3 +1,6 @@
+1.1.0
+- add -gc_width parameter to zoom in the figure as user defined
+
 1.0.3
 - fix pileup workflow bug
 - delete useless added sys.path

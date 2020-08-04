@@ -18,6 +18,10 @@ class coverm:
 		self.outfile = outfile
 
 	def run(self):
-		cmd = 'coverm contig --bam-files %s --methods mean --min-covered-fraction 0 --output-format dense --contig-end-exclusion 0 > %s' % (self.bam, self.outfile)
+		cmd = 'coverm contig --bam-files %s --methods mean \
+				--min-covered-fraction 0 --output-format dense \
+				--contig-end-exclusion 0 > %s' \
+				% (self.bam, self.outfile)
+				
 		gt_exe.exe_cmd(cmd, shell=True)
 		gt_file.check_file_exist(self.outfile, check_empty=True)
