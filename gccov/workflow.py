@@ -79,6 +79,10 @@ class stream:
 				flag = 1
 				cov1 = os.path.join(outdir, arg.prefix+os.path.basename(arg.bam_file[0]) + '.coverage')
 				cov2 = os.path.join(outdir, arg.prefix+os.path.basename(arg.bam_file[1]) + '.coverage')
+				coverm_pile = coverm(arg.bam_file[0], cov1)
+				coverm_pile.run()
+				coverm_pile = coverm(arg.bam_file[1], cov2)
+				coverm_pile.run()
 		else:
 			if len(arg.coverage) == 1:
 				cov = arg.coverage
@@ -86,7 +90,7 @@ class stream:
 				cov1 = arg.coverage[0]
 				cov2 = arg.coverage[1]
 		if flag:
-			gt_file.check_file_exist(cov1, cov2, check_emtpy=True)
+			gt_file.check_file_exist(cov1, cov2, check_empty=True)
 			cov1 = pd.read_csv(cov1, sep="\t", header=0, index_col=0)
 			cov1.columns = ['coverage1']
 			gc_cov = gc_table.merge(cov1, how='inner', left_index=True, right_index=True)
@@ -104,6 +108,7 @@ class stream:
 			gc_cov = gc_table.merge(cov, how='inner', left_index=True, right_index=True)
 		gc_cov.to_csv(outdir + '/' + arg.prefix +'_gc_and_coverage.csv', sep='\t')
 
+		new = gc_cov[gc_cov.seq_length >= arg.congit_len]
 		if '-' in arg.cov_width:
 			cov_width = [float(i) for i in arg.cov_width.split('-')]
 			new = new[(new.coverage >= cov_width[0]) & (new.coverage <= cov_width[1])]
@@ -111,6 +116,12 @@ class stream:
 		if '-' in arg.gc_width:
 			gc_width = [float(i) for i in arg.gc_width.split('-')]
 			new = new[(new.gc_ratio >= gc_width[0]) & (new.gc_ratio <= gc_width[1])]
+
+		for f in gt_file.find_files(arg.bin_dir, suffix=arg.suffix):
+			for i in io_seq.seq_to_dict(f).keys():
+				if i not in new.index:
+					new = new.append(gc_cov.loc[i])
+
 		scatter_plot = scatter(new, outdir+'/'+arg.prefix+'.pdf', \
 								arg.bins_dir, arg.suffix, arg.scale, \
 								arg.size, flag=flag)
