@@ -18,11 +18,9 @@ class coverm:
 		self.outfile = outfile
 
 	def run(self):
+		cmd = 'coverm contig --bam-files %s --methods mean --min-covered-fraction 0 --output-format dense --contig-end-exclusion 0 > %s' % (self.bam, self.outfile)
 		cmd = ['coverm', 'contig', '--bam-files', self.bam, '--methods', 'mean',
 				'--min-covered-fraction', '0', '--output-format', 'dense',
 				'--contig-end-exclusion', '0']
-		#proc = subprocess.Popen(cmd, shell=True, stdout=self.outfile, encoding='utf-8')
-		print(self.outfile)
-		with open(self.outfile, 'w') as outf:
-			gt_exe.exe_cmd(cmd)
-		gt_file.check_exist(self.outfile, check_empty=True)
+		gt_exe.exe_cmd(cmd, shell=True)
+		gt_file.check_file_exist(self.outfile, check_empty=True)
