@@ -4,6 +4,7 @@ The :mod:`gccov.scatter` plot scatter bubbles.
 
 # Author: Jie Li <mm.jlli6t@gmail.com>
 # License: GNU v3.0
+# Copyrigth: 2019
 
 import matplotlib
 matplotlib.use('Agg')

@@ -4,6 +4,7 @@ The :mod:`gccov.version` printing version information.
 
 # Author: Jie Li <mm.jlli6t@gmail.com>
 # License: GNU v3.0
+# Copyrigth: 2018
 
 import os
 from biosut.gt_path import abs_path
@@ -20,4 +21,5 @@ class Version:
     @classmethod
     def show_version(cls):
         ver = cls.get_version()
-        print('\n\n\t\tgccov version * %s *\n\n' % ver)
+        name = os.path.split(os.path.dirname(__file__))[1]
+        print('\n\n\t\t%s version * %s *\n\n' % (name, ver))

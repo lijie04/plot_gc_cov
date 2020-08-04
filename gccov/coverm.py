@@ -1,9 +1,11 @@
 
-###########################################################
-#
-# coverm.py - use this to pileup coverm from bam files  ###
-#
-###########################################################
+"""
+The :mod:`gccov.coverm` plot scatter bubbles.
+"""
+
+# Author: Jie Li <mm.jlli6t@gmail.com>
+# License: GNU v3.0
+# Copyrigth: 2019
 
 import os
 import sys

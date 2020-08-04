@@ -9,9 +9,9 @@ setup(
 	description = 'Visualize gc & coverage.',
 	version = Version.get_version(),
 	url = 'https://github.com/jlli6t/gccov',
-	author = 'M.M Jie Li',
+	author = 'Jie Li',
 	author_email = 'mm.jlli6t@gmail.com',
-	maintainer = 'M.M Jie Li',
+	maintainer = 'Jie Li',
 	maintainer_email = 'mm.jlli6t@gmail.com',
 
 	classifiers = [

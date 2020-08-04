@@ -1,10 +1,10 @@
-#!/usr/bin/env python3
+"""
+The :mod:`gccov.main` pileup the workflow.
+"""
 
-__author__ = 'Jie Li'
-__copyright__ = 'Copyright 2019'
-__credits__ = ['Jie Li']
-__email__ = 'mm.jlli6t@gmail.com'
-__status__ = 'Development'
+# Author: Jie Li <mm.jlli6t@gmail.com>
+# License: GNU v3.0
+# Copyrigth: 2019
 
 import os
 import sys
