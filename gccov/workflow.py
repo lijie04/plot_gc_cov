@@ -40,8 +40,8 @@ def read_arg(args):
 					help='bubles relative size you want, default is 1, you can set to 1.5, 3, 5 or so')
 	optional_arguments.add_argument('-prefix', default='gc_coverage',
 					help='prefix of outputs, [gc_coverage]')
-	optional_arguments.add_argument('-contig_len', default=2500, type=float,
-					help='contig length cutoff for GC content and plot, [2500]')
+	optional_arguments.add_argument('-contig_len', default=0, type=float,
+					help='contig length cutoff for GC content and plot, [0]')
 	optional_arguments.add_argument('-cov_width', default='0', type=str,
 					help='cov range you want to plot, for example 0-100, single 0 means all, [0]')
 	optional_arguments.add_argument('-gc_width', default='0', type=str,
@@ -59,7 +59,7 @@ class stream:
 	def exe(args):
 		arg = read_arg(args)
 		outdir = gt_path.sure_path_exist(arg.outdir)
-		gc_table = gc_to_dict(arg.contigs, arg.contig_len, length=True)
+		gc_table = gc_to_dict(arg.contigs, len_cutoff=arg.contig_len, length=True)
 
 		gc_table = pd.DataFrame.from_dict(gc_table).T
 		gc_table.columns = ['gc_count', 'seq_length']
@@ -81,7 +81,7 @@ class stream:
 		cov.columns = ['coverage']
 		print('Finished get Coverage.\n')
 
-			# get contigs have both gc and coverage
+		# get contigs have both gc and coverage
 		new = cov.merge(gc_table, how='inner', left_index=True, right_index=True)
 		new.to_csv(outdir + '/' + arg.prefix +'_gc_and_coverage.csv', sep='\t')
 
@@ -95,5 +95,5 @@ class stream:
 		scatter_plot = scatter(new, outdir+'/'+arg.prefix+'.pdf', \
 								arg.bins_dir, arg.suffix, arg.scale, \
 								arg.size)
-#								scatter_plot = scatter(new, outdir+pars['prefix']+'.pdf', **pars)
+#		scatter_plot = scatter(new, outdir+pars['prefix']+'.pdf', **pars)
 		scatter_plot.plot()
