@@ -1,3 +1,7 @@
+1.0.3
+- fix pileup workflow bug
+- delete useless added sys.path
+
 1.0.2
 - fix pileup coverm bug
 
