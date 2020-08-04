@@ -30,8 +30,10 @@ def read_arg(args):
 
 	mutual_required_argument = p.add_argument_group('Mutually exclusive required argument')
 	mutual_rgs = mutual_required_argument.add_mutually_exclusive_group(required=True)
-	mutual_rgs.add_argument('--coverage', help='coverage file, with column name Coverage')
-	mutual_rgs.add_argument('--bam_file', help='sorted bam file')
+	mutual_rgs.add_argument('--coverage', nargs='+',
+						help='one or two coverage file, with one column coverage')
+	mutual_rgs.add_argument('--bam_file', nargs='+',
+						help='one or two sorted bam file')
 
 	optional_arguments = p.add_argument_group('Optional arguments')
 	optional_arguments.add_argument('-scale', default=False, action='store_true',
@@ -67,23 +69,40 @@ class stream:
 		print("Finished get GC content.\n")
 
 		gc_table.to_csv(outdir +'/'+ arg.prefix + '_gc_content.txt', sep='\t')
-
+		flag = 0
 		if arg.bam_file:
-			cov = os.path.join(outdir, arg.prefix+'.coverage')
-			coverm_pile = coverm(arg.bam_file, cov)
-			coverm_pile.run()
+			if len(arg.bam_file) == 1:
+				cov = os.path.join(outdir, arg.prefix+'.coverage')
+				coverm_pile = coverm(arg.bam_file, cov)
+				coverm_pile.run()
+			else:
+				flag = 1
+				cov1 = os.path.join(outdir, arg.prefix+os.path.basename(arg.bam_file[0]) + '.coverage')
+				cov2 = os.path.join(outdir, arg.prefix+os.path.basename(arg.bam_file[1]) + '.coverage')
 		else:
-			cov = arg.coverage
-		gt_file.check_file_exist(cov, check_empty=True)
-
-		cov = pd.read_csv(cov, sep="\t", header=0, index_col=0)
-		#print(cov)
-		cov.columns = ['coverage']
-		print('Finished get Coverage.\n')
-
-		# get contigs have both gc and coverage
-		new = cov.merge(gc_table, how='inner', left_index=True, right_index=True)
-		new.to_csv(outdir + '/' + arg.prefix +'_gc_and_coverage.csv', sep='\t')
+			if len(arg.coverage) == 1:
+				cov = arg.coverage
+			else:
+				cov1 = arg.coverage[0]
+				cov2 = arg.coverage[1]
+		if flag:
+			gt_file.check_file_exist(cov1, cov2, check_emtpy=True)
+			cov1 = pd.read_csv(cov1, sep="\t", header=0, index_col=0)
+			cov1.columns = ['coverage1']
+			gc_cov = gc_table.merge(cov1, how='inner', left_index=True, right_index=True)
+			cov2 = pd.read_csv(cov2, sep="\t", header=0, index_col=0)
+			cov2.columns = ['coverage2']
+			print('Finished get Coverage.\n')
+			gc_cov = gc_cov.merge(cov2, how='inner', left_index=True, right_index=True)
+		else:
+			gt_file.check_file_exist(cov, check_empty=True)
+			cov = pd.read_csv(cov, sep="\t", header=0, index_col=0)
+			#print(cov)
+			cov.columns = ['coverage']
+			print('Finished get Coverage.\n')
+			# get contigs have both gc and coverage
+			gc_cov = gc_table.merge(cov, how='inner', left_index=True, right_index=True)
+		gc_cov.to_csv(outdir + '/' + arg.prefix +'_gc_and_coverage.csv', sep='\t')
 
 		if '-' in arg.cov_width:
 			cov_width = [float(i) for i in arg.cov_width.split('-')]
@@ -94,6 +113,6 @@ class stream:
 			new = new[(new.gc_ratio >= gc_width[0]) & (new.gc_ratio <= gc_width[1])]
 		scatter_plot = scatter(new, outdir+'/'+arg.prefix+'.pdf', \
 								arg.bins_dir, arg.suffix, arg.scale, \
-								arg.size)
+								arg.size, flag=flag)
 #		scatter_plot = scatter(new, outdir+pars['prefix']+'.pdf', **pars)
 		scatter_plot.plot()
