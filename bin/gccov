@@ -9,8 +9,6 @@ __status__ = 'Development'
 import os
 import sys
 
-sys.path = [os.path.join((os.path.dirname(os.path.realpath(__file__))), '..')] + sys.path
-
 from gccov.workflow import read_arg
 from gccov.workflow import stream
 
