@@ -59,7 +59,7 @@ class stream:
 	def exe(args):
 		arg = read_arg(args)
 		outdir = gt_path.sure_path_exist(arg.outdir)
-		gc_table = gc_to_dict(arg.contigs, len_cutoff=arg.contig_len, length=True)
+		gc_table = gc_to_dict(arg.contigs, len_cutoff=0, length=True)
 
 		gc_table = pd.DataFrame.from_dict(gc_table).T
 		gc_table.columns = ['gc_count', 'seq_length']
