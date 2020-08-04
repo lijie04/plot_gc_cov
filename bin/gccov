@@ -11,12 +11,12 @@ import sys
 
 sys.path = [os.path.join((os.path.dirname(os.path.realpath(__file__))), '..')] + sys.path
 
-from gccov.main import read_arg
-from gccov.main import Main
+from gccov.workflow import read_arg
+from gccov.workflow import stream
 
 if __name__ == '__main__':
 	if len(sys.argv) == 1:
 		sys.argv.append('-h')
 		read_arg(sys.argv)
 
-	Main.exe(sys.argv)
+	stream.exe(sys.argv)

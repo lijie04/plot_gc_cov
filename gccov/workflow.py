@@ -54,7 +54,7 @@ def read_arg(args):
 					help='output dir')
 	return p.parse_args()
 
-class Main:
+class stream:
 
 	def exe(args):
 		arg = read_arg(args)
