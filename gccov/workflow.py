@@ -14,7 +14,7 @@ import pandas as pd
 from biosut.gt_path import real_path
 
 from biosut import gt_file, gt_path
-from biosut.io_seq import gc_to_dict
+from biosut.io_seq import gc_to_dict, seq_to_dict
 
 from gccov.scatter import scatter
 from gccov.coverm import coverm
@@ -108,7 +108,7 @@ class stream:
 			gc_cov = gc_table.merge(cov, how='inner', left_index=True, right_index=True)
 		gc_cov.to_csv(outdir + '/' + arg.prefix +'_gc_and_coverage.csv', sep='\t')
 
-		new = gc_cov[gc_cov.seq_length >= arg.congit_len]
+		new = gc_cov[gc_cov.seq_length >= arg.contig_len]
 		if '-' in arg.cov_width:
 			cov_width = [float(i) for i in arg.cov_width.split('-')]
 			new = new[(new.coverage >= cov_width[0]) & (new.coverage <= cov_width[1])]
@@ -117,8 +117,8 @@ class stream:
 			gc_width = [float(i) for i in arg.gc_width.split('-')]
 			new = new[(new.gc_ratio >= gc_width[0]) & (new.gc_ratio <= gc_width[1])]
 
-		for f in gt_file.find_files(arg.bin_dir, suffix=arg.suffix):
-			for i in io_seq.seq_to_dict(f).keys():
+		for f in gt_file.find_files(arg.bins_dir, suffix=arg.suffix):
+			for i in seq_to_dict(f).keys():
 				if i not in new.index:
 					new = new.append(gc_cov.loc[i])
 
@@ -127,3 +127,10 @@ class stream:
 								arg.size, flag=flag)
 #		scatter_plot = scatter(new, outdir+pars['prefix']+'.pdf', **pars)
 		scatter_plot.plot()
+
+	def check_dependencies():
+		"""
+		Check dependencies for this workflow.
+		"""
+		gt_exe.is_excutable('coverm')
+		

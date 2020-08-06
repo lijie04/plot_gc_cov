@@ -23,3 +23,10 @@ class Version:
         ver = cls.get_version()
         name = os.path.split(os.path.dirname(__file__))[1]
         print('\n\n\t\t%s version * %s *\n\n' % (name, ver))
+
+	def long_description():
+		readme1 = join(f_dir, 'README.md')
+		readme2 = join(f_dir, '/../README.md')
+		if isfile(readme1):return open(readme1).read()
+		if isfile(readme2):return open(readme2).read()
+		return "No detailed description"
