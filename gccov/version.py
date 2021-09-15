@@ -2,7 +2,7 @@
 The :mod:`gccov.version` printing version information.
 """
 
-# Author: Jie Li <mm.jlli6t@gmail.com>
+# Author: Jie Li <jlli6t@gmail.com>
 # License: GNU v3.0
 # Copyrigth: 2018
 

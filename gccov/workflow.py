@@ -2,7 +2,7 @@
 The :mod:`gccov.workflow` pileup the workflow.
 """
 
-# Author: Jie Li <mm.jlli6t@gmail.com>
+# Author: Jie Li <jlli6t@gmail.com>
 # License: GNU v3.0
 # Copyrigth: 2019
 

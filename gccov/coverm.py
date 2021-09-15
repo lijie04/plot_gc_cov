@@ -3,7 +3,7 @@
 The :mod:`gccov.coverm` pile up coverm.
 """
 
-# Author: Jie Li <mm.jlli6t@gmail.com>
+# Author: Jie Li <jlli6t@gmail.com>
 # License: GNU v3.0
 # Copyrigth: 2019
 
@@ -22,6 +22,6 @@ class coverm:
 				--min-covered-fraction 0 --output-format dense \
 				--contig-end-exclusion 0 > %s' \
 				% (self.bam, self.outfile)
-				
+
 		gt_exe.exe_cmd(cmd, shell=True)
 		gt_file.check_file_exist(self.outfile, check_empty=True)
