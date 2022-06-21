@@ -125,11 +125,9 @@ class stream:
 		scatter_plot = scatter(new, outdir+'/'+arg.prefix+'.pdf', \
 								arg.bins_dir, arg.suffix, arg.scale, \
 								arg.size, flag=flag)
-#		scatter_plot = scatter(new, outdir+pars['prefix']+'.pdf', **pars)
+		# scatter_plot = scatter(new, outdir+pars['prefix']+'.pdf', **pars)
 		scatter_plot.plot()
 
 	def check_dependencies():
-		"""
-		Check dependencies for this workflow.
-		"""
+		"""Check dependencies for this workflow."""
 		gt_exe.is_excutable('coverm')

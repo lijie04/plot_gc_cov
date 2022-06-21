@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-__author__ = 'Jie Li'
-__copyright__ = 'Copyright 2019'
-__credits__ = ['Jie Li']
-__email__ = 'mm.jlli6t@gmail.com'
-__status__ = 'Development'
+__author__ = "Jie Li"
+__copyright__ = "Copyright 2019"
+__credits__ = "Jie Li"
+__email__ = "jlli6t@gmail.com"
+__status__ = "Development"
 
 import os
 import sys
@@ -13,17 +13,17 @@ from gccov.version import Version
 from gccov.workflow import read_arg
 from gccov.workflow import stream
 
-if __name__ == '__main__':
-	if len(sys.argv) == 1:
-		sys.argv.append('-h')
-		Version.show_version()
-		read_arg(sys.argv)
-	elif len(sys.argv) == 2 and '-h' in sys.argv[1]:
-		sys.argv.append('-h')
-		Version.show_version()
-		read_arg(sys.argv)
-	elif len(sys.argv) == 2 and '-v' in sys.argv[1]:
-		Version.show_version()
-	else:
-		stream.check_dependencies()
-		stream.exe(sys.argv)
+if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        sys.argv.append("-h")
+        Version.show_version()
+        read_arg(sys.argv)
+    elif len(sys.argv) == 2 and "-h" in sys.argv[1]:
+        sys.argv.append("-h")
+        Version.show_version()
+        read_arg(sys.argv)
+    elif len(sys.argv) == 2 and "-v" in sys.argv[1]:
+        Version.show_version()
+    else:
+        stream.check_dependencies()
+        stream.exe(sys.argv)
