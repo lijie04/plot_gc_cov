@@ -15,3 +15,6 @@ Blue and red bubbles are representing genome A and B, respectively. It is very c
 When you zoom in, you can clearly see the difference between these two genomes.
 
 ![gccov_p2]({{ 'assets/picbed/proj/gccov_p1.png' | relative_url }})
+
+### Contact
+Jie Li
