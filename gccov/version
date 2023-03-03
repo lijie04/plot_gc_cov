@@ -1,3 +1,6 @@
+1.3.0
+- if add two bams or covs, the x-axis and y-axis of the final scatter figure will be coverage of the first and second input bam or cov file, repsectively.
+
 1.2.0
 - make -contig_len parameter to just filter background contigs
 

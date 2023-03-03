@@ -9,14 +9,21 @@ __status__ = 'Development'
 import os
 import sys
 
-import gccov
-
+from gccov.version import Version
 from gccov.workflow import read_arg
 from gccov.workflow import stream
 
-if __name__ == '__main__':
-	if len(sys.argv) == 1:
-		sys.argv.append('-h')
-		read_arg(sys.argv)
-
-	stream.exe(sys.argv)
+if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        sys.argv.append("-h")
+        Version.show_version()
+        read_arg(sys.argv)
+    elif len(sys.argv) == 2 and "-h" in sys.argv[1]:
+        sys.argv.append("-h")
+        Version.show_version()
+        read_arg(sys.argv)
+    elif len(sys.argv) == 2 and "-v" in sys.argv[1]:
+        Version.show_version()
+    else:
+        stream.check_dependencies()
+        stream.exe(sys.argv)

@@ -14,6 +14,9 @@ setup(
 	maintainer = 'Jie Li',
 	maintainer_email = 'mm.jlli6t@gmail.com',
 
+	long_description=Version.long_description(),
+	long_description_content_type='markdown',
+
 	classifiers = [
 				'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
 				'Programming Language :: Python :: 3 :: Only',
