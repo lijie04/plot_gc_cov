@@ -9,6 +9,9 @@ The :mod:`gccov.scatter` plot scatter bubbles.
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from biosut import biosys as bs
+from biosut import bioseq as bseq
+
 from biosut import io_seq, gt_file
 import os
 import pandas as pd
@@ -22,6 +25,7 @@ class scatter:
 		self.outpdf = outpdf
 		self.scale = scale
 		self.size = 10000/size
+		self.flag = flag
 
 	def plot(self):
 		if self.bins_dir:
@@ -32,7 +36,7 @@ class scatter:
 #		self.data.color = full_contigs_color
 #		self.data.srt_values(by='color')
 
-		if flag:
+		if self.flag:
 			x = 'coverage1'
 			y = 'coverage2'
 		else:
@@ -60,7 +64,7 @@ class scatter:
 		flag = 0
 		color_sets = ['blue', 'red', 'yellow', 'green', 'orange', 'purple', 'pink']
 		contigs_color = {}
-		for f in gt_file.find_files(self.bins_dir, suffix=self.suffix):
+		for f in bs.list_file(self.bins_dir, suffix=self.suffix):
 			print(color_sets[flag])
 			f_ids = io_seq.seq_to_dict(f, outqual=False)
 			for i in f_ids.keys():

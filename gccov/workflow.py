@@ -11,17 +11,20 @@ import sys
 import argparse
 
 import pandas as pd
-from biosut.gt_path import real_path
 
-from biosut import gt_file, gt_path
-from biosut.io_seq import gc_to_dict, seq_to_dict
+from biosut import biosys as bs
+from biosut import bioseq as bseq
 
 from gccov.scatter import scatter
 from gccov.coverm import coverm
 from gccov.version import Version
 
-def read_arg(args):
 
+from biosut import gt_file, gt_path
+from biosut.io_seq import gc_to_dict, seq_to_dict
+from biosut.gt_path import real_path
+
+def read_arg(args):
 	p = argparse.ArgumentParser(description=Version.show_version())
 	required_argument = p.add_argument_group('Required arguments')
 
@@ -56,11 +59,11 @@ def read_arg(args):
 					help='output dir')
 	return p.parse_args()
 
-class stream:
 
+class stream:
 	def exe(args):
 		arg = read_arg(args)
-		outdir = gt_path.sure_path_exist(arg.outdir)
+		outdir = bs.check_path(arg.outdir, mkdir=True)
 		gc_table = gc_to_dict(arg.contigs, len_cutoff=0, length=True)
 
 		gc_table = pd.DataFrame.from_dict(gc_table).T
@@ -68,7 +71,7 @@ class stream:
 		gc_table['gc_ratio'] = gc_table.gc_count/gc_table.seq_length*100.
 		print("Finished get GC content.\n")
 
-		gc_table.to_csv(outdir +'/'+ arg.prefix + '_gc_content.txt', sep='\t')
+		gc_table.to_csv(os.path.join(outdir, arg.prefix, '_gc_content.txt'), sep='\t')
 		flag = 0
 		if arg.bam_file:
 			if len(arg.bam_file) == 1:
@@ -90,7 +93,7 @@ class stream:
 				cov1 = arg.coverage[0]
 				cov2 = arg.coverage[1]
 		if flag:
-			gt_file.check_file_exist(cov1, cov2, check_empty=True)
+			bs.check_file(cov1, cov2, check_empty=True)
 			cov1 = pd.read_csv(cov1, sep="\t", header=0, index_col=0)
 			cov1.columns = ['coverage1']
 			gc_cov = gc_table.merge(cov1, how='inner', left_index=True, right_index=True)
@@ -99,14 +102,14 @@ class stream:
 			print('Finished get Coverage.\n')
 			gc_cov = gc_cov.merge(cov2, how='inner', left_index=True, right_index=True)
 		else:
-			gt_file.check_file_exist(cov, check_empty=True)
+			bs.check_file(cov, check_empty=True)
 			cov = pd.read_csv(cov, sep="\t", header=0, index_col=0)
 			#print(cov)
 			cov.columns = ['coverage']
 			print('Finished get Coverage.\n')
 			# get contigs have both gc and coverage
 			gc_cov = gc_table.merge(cov, how='inner', left_index=True, right_index=True)
-		gc_cov.to_csv(outdir + '/' + arg.prefix +'_gc_and_coverage.csv', sep='\t')
+		gc_cov.to_csv(os.path.join(outdir, arg.prefix, '_gc_and_coverage.csv'), sep='\t')
 
 		new = gc_cov[gc_cov.seq_length >= arg.contig_len]
 		if '-' in arg.cov_width:
@@ -117,12 +120,12 @@ class stream:
 			gc_width = [float(i) for i in arg.gc_width.split('-')]
 			new = new[(new.gc_ratio >= gc_width[0]) & (new.gc_ratio <= gc_width[1])]
 
-		for f in gt_file.find_files(arg.bins_dir, suffix=arg.suffix):
+		for f in bs.list_file(arg.bins_dir, suffix=arg.suffix):
 			for i in seq_to_dict(f).keys():
 				if i not in new.index:
 					new = new.append(gc_cov.loc[i])
 
-		scatter_plot = scatter(new, outdir+'/'+arg.prefix+'.pdf', \
+		scatter_plot = scatter(new, os.path.join(outdir, arg.prefix, '.pdf'), \
 								arg.bins_dir, arg.suffix, arg.scale, \
 								arg.size, flag=flag)
 		# scatter_plot = scatter(new, outdir+pars['prefix']+'.pdf', **pars)
@@ -130,4 +133,4 @@ class stream:
 
 	def check_dependencies():
 		"""Check dependencies for this workflow."""
-		gt_exe.is_excutable('coverm')
+		bs.is_executable('coverm')

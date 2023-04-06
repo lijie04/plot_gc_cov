@@ -6,11 +6,10 @@ The :mod:`readtrim.version` print and show version information.
 # License: GNU v3.0
 # Copyrigth: 2019
 
-from os.path import join, isfile, split, dirname
-from biosut.gt_path import abs_path
+from os.path import join, isfile, split, dirname, abspath
 
 class Version:
-	f_dir = dirname(abs_path(__file__))
+	f_dir = dirname(abspath(__file__))
 
 	@classmethod
 	def get_version(cls):
